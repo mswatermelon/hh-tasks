@@ -6,6 +6,11 @@ sys.setrecursionlimit(10000)
 limit = 0
 alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
+class ShortBaseException(Exception):
+    def __init__(self, value):
+        Exception.__init__(self)
+        self.value = int(value)
+
 def get_numb_for_rec(a,b):
 	mod = []
 	l = -1
@@ -30,10 +35,12 @@ def fractionToDecimal(a, b):
 	a = abs(a)
 	b = abs(b)
 	 
-	maxlen=1000
-	mod = []
+	maxlen = 10000
+	
 	if a == 0 or b == 0:
 		return "0"
+		
+	mod = []
 	res = []
 	l = -1
 	while len(mod) < maxlen:
@@ -47,7 +54,7 @@ def fractionToDecimal(a, b):
 		else:
 			mod.append(m)
 			a = m * 10
-	 
+			
 	if len(res) == 1:
 		s = str(res[0])
 	else:
@@ -88,7 +95,7 @@ def number_to_other_base(a, b, k):
 	limit = 0
 	
 	if k < 2 or k > 36:
-		return ""
+		raise ShortBaseException(k)
 		
 	l = get_numb_for_rec(a,b)
 	
@@ -131,27 +138,35 @@ def number_to_other_base(a, b, k):
 					if first:
 						key_only = key
 						first = False
-					only = 1
+					only = only * 1
 				else:
 					only = only * 0
 			if alphabet[i]:
 				newc_d[key] = alphabet[i]
 		if only and key_only != -1:
-			return minus + str_answ + '.' + "".join([str(n) for n in newc_d[0:key_only]]) + "(" + "".join([str(n) for n in newc_d[key_only:key_only+1]]) + ")"
+			return minus + str_answ + '.' + "".join([str(n) \
+			for n in newc_d[0:key_only]]) + "(" + "".join([str(n) \
+			for n in newc_d[key_only:key_only+1]]) + ")"
 		str_answ = str_answ + '.'
 		if l == -1:
 			str_answ = str_answ + ''.join(map(str,newc_d))
 		else:
-			str_answ = str_answ + "".join([str(n) for n in newc_d[0:l]]) + "(" + "".join([str(n) for n in newc_d[l::]]) + ")"
+			str_answ = str_answ + "".join([str(n) for n in newc_d[0:l]]) \
+			+ "(" + "".join([str(n) for n in newc_d[l::]]) + ")"
 
 	str_answ = minus + str_answ
 
 	return str_answ
 
 def main():
+	print u"Данная программа для расчета частного от деления двух чисел," \
+	u" переведенного в систему счисления(СС).\n" \
+	u"СС пользователь задает сам. Допустимое значение основания для СС" \
+	u" от 2 до 36.\n"
 	x = 0	
 	while x == 0:
-		print u"Введите два числа и основание для новой системы счисления через пробел:"
+		print u"Введите делимое, делитель и основание для новой системы" \
+		u" счисления через пробел:"
 		try:
 			pair = raw_input()
 
@@ -160,8 +175,9 @@ def main():
 			
 			c = pair[0]/pair[1]
 			
+			res = number_to_other_base(pair[0], pair[1], pair[2])			
 			print u'Результат:'
-			print number_to_other_base(pair[0], pair[1], pair[2])
+			print res
 			
 			x = 1
 		except ValueError:
@@ -172,9 +188,10 @@ def main():
 			pass
 		except ZeroDivisionError:
 			print u"Делитель не должен быть равен нулю."
+			pass	
+		except ShortBaseException as ex:
+			print u"Основание для системы счисления должно быть от 2 до 36."\
+			u" А введено {0}.".format(ex.value)
 			pass		
-
-print u'''Данная программа для расчета частного от деления двух чисел, переведенного в систему счисления(СС).
-СС пользователь задает сам. Допустимое значение основания для СС от 2 до 36.\n'''
 	
 main()

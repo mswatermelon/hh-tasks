@@ -1,16 +1,6 @@
 ﻿# -*- coding:utf-8 -*-
 import math
 
-set = []
-
-min_distance = 0
-distance = 0
-firstpoint = None
-secondpoint = None
-pair = None
-
-N = 0
-
 
 class ShortInputException(Exception):
     def __init__(self, length, atleast):
@@ -32,6 +22,12 @@ class IntegerException(Exception):
 
 
 def main():
+    set = []
+
+    min_distance = 0
+
+    N = 0
+
     print u"Данная программа для расчета минимального расстояния" \
           u" между двумя точками из введенного набора.\n"
     while True:
@@ -90,12 +86,13 @@ def main():
     except IndexError:
         print
 
-    for key, pair in enumerate(set):
-        if key < len(set) - 1:
-            distance = math.sqrt((pair[0] - set[key + 1][0]) ** 2 \
-                                 + (pair[1] - set[key + 1][1]) ** 2)
-            if distance < min_distance:
-                min_distance = distance
+    for pair in set:
+        for pair2 in set:
+            if pair != pair2:
+                distance = math.sqrt((pair[0] - pair2[0]) ** 2 \
+                                     + (pair[1] - pair2[1]) ** 2)
+                if distance < min_distance:
+                    min_distance = distance
     if len(set) != 0:
         print u'Результат:'
         if math.modf(min_distance)[0] == 0.0:

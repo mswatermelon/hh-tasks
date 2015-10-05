@@ -92,12 +92,12 @@ def number_fract_to_base(c, k, newc_d):
     if math.modf(res)[0] == 0.0:
         return
 
-    while limit < sys.getrecursionlimit() - 3:
+    while limit < sys.getrecursionlimit() - 4:
         number_fract_to_base(math.modf(res)[0], k, newc_d)
 
 
 def number_to_other_base(a, b, k):
-    global limit
+    global limit, alphabet
     limit = 0
 
     if k < 2 or k > 36:
